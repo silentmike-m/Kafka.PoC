@@ -1,0 +1,18 @@
+name: kafka-poc
+network: localdev
+services:
+  - name: server
+    project: src/Kafka.Poc.Server/Kafka.Poc.Server.csproj
+    bindings:
+    - protocol: http
+      port: 8080
+  - name: cars
+    project: src/Kafka.Poc.Client.Cars/Kafka.Poc.Client.Cars.csproj
+    bindings:
+      - protocol: http
+        port: 8081
+  - name: customers
+    project: src/Kafka.Poc.Client.Customers/Kafka.Poc.Client.Customers.csproj
+    bindings:
+      - protocol: http
+        port: 8082
