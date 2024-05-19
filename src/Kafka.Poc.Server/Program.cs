@@ -1,54 +1,56 @@
+using System.Reflection;
+using Serilog;
+
+const int EXIT_FAILURE = 1;
+const int EXIT_SUCCESS = 0;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Host.UseSerilog((_, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration)
+        ;
+});
+
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.ConfigureSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName);
+});
+
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+builder.Services.AddControllers();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    Log.Information("Starting host...");
 
-app.UseHttpsRedirection();
+    var app = builder.Build();
 
-var summaries = new[]
-{
-    "Freezing",
-    "Bracing",
-    "Chilly",
-    "Cool",
-    "Mild",
-    "Warm",
-    "Balmy",
-    "Hot",
-    "Sweltering",
-    "Scorching",
-};
-
-app.MapGet("/weatherforecast", () =>
+    if (app.Environment.IsDevelopment())
     {
-        var forecast = Enumerable.Range(start: 1, count: 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(minValue: -20, maxValue: 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+    app.MapControllers();
 
-app.Run();
+    await app.RunAsync();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    return EXIT_SUCCESS;
+}
+catch (Exception exception)
 {
-    public int TemperatureF => 32 + (int)(this.TemperatureC / 0.5556);
+    Log.Fatal(exception, "Host terminated unexpectedly");
+
+    return EXIT_FAILURE;
+}
+finally
+{
+    Log.CloseAndFlush();
 }
