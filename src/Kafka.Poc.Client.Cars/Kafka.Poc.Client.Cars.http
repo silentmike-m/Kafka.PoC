@@ -1,6 +1,0 @@
-@Kafka.Poc.Client.Cars_HostAddress = http://localhost:5251
-
-GET {{Kafka.Poc.Client.Cars_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

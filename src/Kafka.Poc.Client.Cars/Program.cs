@@ -1,44 +1,59 @@
+using System.Reflection;
+using Kafka.Poc.Client.Cars.Cars;
+using Serilog;
+
+const int EXIT_FAILURE = 1;
+const int EXIT_SUCCESS = 0;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Host.UseSerilog((_, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration)
+        ;
+});
+
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.ConfigureSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName);
+});
+
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+builder.Services.AddControllers();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddCars();
+
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Information("Starting host...");
+
+    var app = builder.Build();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.MapControllers();
+
+    await app.RunAsync();
+
+    return EXIT_SUCCESS;
 }
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
+catch (Exception exception)
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    Log.Fatal(exception, "Host terminated unexpectedly");
 
-app.MapGet("/weatherforecast", () =>
+    return EXIT_FAILURE;
+}
+finally
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Log.CloseAndFlush();
 }
