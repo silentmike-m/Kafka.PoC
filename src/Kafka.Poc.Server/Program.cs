@@ -1,4 +1,5 @@
 using System.Reflection;
+using Kafka.Poc.Server.Kafka;
 using Serilog;
 
 const int EXIT_FAILURE = 1;
@@ -26,17 +27,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+builder.Services.AddKafka(builder.Configuration);
+
 try
 {
     Log.Information("Starting host...");
 
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.MapControllers();
 
