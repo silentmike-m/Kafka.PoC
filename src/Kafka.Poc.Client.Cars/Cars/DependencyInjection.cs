@@ -1,7 +1,7 @@
 ﻿namespace Kafka.Poc.Client.Cars.Cars;
 
-using Kafka.Poc.Client.Cars.Cars.Interfaces;
-using Kafka.Poc.Client.Cars.Cars.Services;
+using global::Kafka.Poc.Client.Cars.Cars.Interfaces;
+using global::Kafka.Poc.Client.Cars.Cars.Services;
 
 internal static class DependencyInjection
 {

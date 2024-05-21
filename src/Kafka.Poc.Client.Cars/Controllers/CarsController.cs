@@ -1,7 +1,7 @@
 ﻿namespace Kafka.Poc.Client.Cars.Controllers;
 
-using Kafka.Poc.Client.Cars.Cars.Queries;
-using Kafka.Poc.Client.Cars.Cars.ViewModels;
+using global::Kafka.Poc.Client.Cars.Cars.Queries;
+using global::Kafka.Poc.Client.Cars.Cars.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController, Route("[controller]/[action]")]

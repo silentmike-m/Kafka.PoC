@@ -1,6 +1,6 @@
 ﻿namespace Kafka.Poc.Client.Cars.Cars.Interfaces;
 
-using Kafka.Poc.Client.Cars.Cars.Models;
+using global::Kafka.Poc.Client.Cars.Cars.Models;
 
 internal interface ICarRepository
 {

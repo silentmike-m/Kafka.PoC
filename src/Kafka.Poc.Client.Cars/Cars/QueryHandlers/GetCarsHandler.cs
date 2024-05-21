@@ -1,8 +1,8 @@
 ﻿namespace Kafka.Poc.Client.Cars.Cars.QueryHandlers;
 
-using Kafka.Poc.Client.Cars.Cars.Interfaces;
-using Kafka.Poc.Client.Cars.Cars.Queries;
-using Kafka.Poc.Client.Cars.Cars.ViewModels;
+using global::Kafka.Poc.Client.Cars.Cars.Interfaces;
+using global::Kafka.Poc.Client.Cars.Cars.Queries;
+using global::Kafka.Poc.Client.Cars.Cars.ViewModels;
 using MediatR;
 
 internal sealed class GetCarsHandler : IRequestHandler<GetCars, IReadOnlyList<Car>>

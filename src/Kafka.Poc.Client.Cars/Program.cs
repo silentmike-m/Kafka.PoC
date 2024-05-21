@@ -1,5 +1,6 @@
 using System.Reflection;
 using Kafka.Poc.Client.Cars.Cars;
+using Kafka.Poc.Client.Cars.Kafka;
 using Serilog;
 
 const int EXIT_FAILURE = 1;
@@ -26,6 +27,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddKafka(builder.Configuration);
 
 builder.Services.AddCars();
 
