@@ -4,6 +4,7 @@ using Kafka.Poc.Client.Customers.Customers.Models;
 
 internal interface ICustomerRepository
 {
-    Task AddAsync(CustomerEntity customer, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<CustomerEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Guid>> GetRepositoriesAsync(CancellationToken cancellationToken = default);
+    Task<CustomerRepositoryEntity?> GetRepositoryAsync(Guid id, CancellationToken cancellationToken = default);
+    Task UpsertAsync(CustomerRepositoryEntity repository, CancellationToken cancellationToken = default);
 }

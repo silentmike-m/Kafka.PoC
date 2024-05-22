@@ -20,20 +20,23 @@ internal sealed class GetCustomersHandler : IRequestHandler<GetCustomers, IReadO
     {
         this.logger.LogInformation("Try to get all customers");
 
-        var customers = await this.customerRepository.GetAllAsync(cancellationToken);
+        var repository = await this.customerRepository.GetRepositoryAsync(request.RepositoryId, cancellationToken);
 
         var result = new List<Customer>();
 
-        foreach (var customer in customers)
+        if (repository is not null)
         {
-            var customerResult = new Customer
+            foreach (var (_, customer) in repository.Customers)
             {
-                FirstName = customer.FirstName,
-                Id = customer.Id,
-                LastName = customer.LastName,
-            };
+                var customerResult = new Customer
+                {
+                    FirstName = customer.FirstName,
+                    Id = customer.Id,
+                    LastName = customer.LastName,
+                };
 
-            result.Add(customerResult);
+                result.Add(customerResult);
+            }
         }
 
         return result;

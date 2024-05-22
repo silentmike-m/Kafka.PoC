@@ -20,6 +20,13 @@ internal sealed class AddCustomerHandler : IRequestHandler<AddCustomer>
     {
         this.logger.LogInformation("Try to add customer with id {CustomerId}", request.Id);
 
+        var repository = await this.customerRepository.GetRepositoryAsync(request.RepositoryId, cancellationToken);
+
+        repository ??= new CustomerRepositoryEntity
+        {
+            Id = request.Id,
+        };
+
         var customer = new CustomerEntity
         {
             FirstName = request.FirstName,
@@ -27,6 +34,8 @@ internal sealed class AddCustomerHandler : IRequestHandler<AddCustomer>
             LastName = request.LastName,
         };
 
-        await this.customerRepository.AddAsync(customer, cancellationToken);
+        repository.Customers[request.Id] = customer;
+
+        await this.customerRepository.UpsertAsync(repository, cancellationToken);
     }
 }
