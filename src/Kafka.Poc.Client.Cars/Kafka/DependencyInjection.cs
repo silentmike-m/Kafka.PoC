@@ -1,5 +1,6 @@
 ﻿namespace Kafka.Poc.Client.Cars.Kafka;
 
+using global::Kafka.Poc.Client.Cars.Kafka.Interfaces;
 using global::Kafka.Poc.Client.Cars.Kafka.Services;
 
 internal static class DependencyInjection
@@ -10,6 +11,8 @@ internal static class DependencyInjection
         options ??= new KafkaOptions();
 
         services.AddSingleton(options);
+
+        services.AddSingleton<IKafkaAdminService, KafkaAdminService>();
 
         services.AddHostedService<CarClientService>();
 

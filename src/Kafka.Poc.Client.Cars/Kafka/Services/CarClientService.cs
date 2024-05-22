@@ -2,31 +2,35 @@
 
 using System.Text.Json;
 using Confluent.Kafka;
-using Confluent.Kafka.Admin;
 using global::Kafka.Poc.Client.Cars.Cars.Commands;
+using global::Kafka.Poc.Client.Cars.Kafka.Extensions;
+using global::Kafka.Poc.Client.Cars.Kafka.Interfaces;
 using global::Kafka.Poc.Client.Cars.Kafka.Models;
+using global::Kafka.PoC.Shared.Constants;
 using MediatR;
 
 internal sealed class CarClientService : BackgroundService
 {
+    private readonly IKafkaAdminService kafkaAdminService;
     private readonly KafkaOptions kafkaOptions;
     private readonly ISender mediator;
 
-    public CarClientService(KafkaOptions kafkaOptions, ISender mediator)
+    public CarClientService(IKafkaAdminService kafkaAdminService, KafkaOptions kafkaOptions, ISender mediator)
     {
+        this.kafkaAdminService = kafkaAdminService;
         this.kafkaOptions = kafkaOptions;
         this.mediator = mediator;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await CreateTopicAsync(this.kafkaOptions);
+        await this.kafkaAdminService.CreateTopicAsync(TopicNames.CAR_TOPIC_NAME);
 
         var consumerConfig = CreateConsumerConfig(this.kafkaOptions);
 
         using var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
 
-        consumer.Subscribe("CAR-TOPIC-1234");
+        consumer.Subscribe("CAR-TOPIC");
 
         try
         {
@@ -40,6 +44,11 @@ internal sealed class CarClientService : BackgroundService
                 }
 
                 var carMessage = JsonSerializer.Deserialize<CarMessage>(message.Message.Value);
+
+                if (carMessage is null)
+                {
+                    continue;
+                }
 
                 await this.mediator.Send(new AddCar
                 {
@@ -65,60 +74,13 @@ internal sealed class CarClientService : BackgroundService
     {
         var config = new ConsumerConfig
         {
-            BootstrapServers = options.BootstrapServers,
-            ClientId = options.ClientId,
             EnableAutoCommit = true,
             EnableAutoOffsetStore = false,
             GroupId = "1",
-            SecurityProtocol = SecurityProtocol.Plaintext,
-            StatisticsIntervalMs = options.StatisticsIntervalInMilliSeconds,
         };
 
-        if (options.UseSaslSsl)
-        {
-            config.SaslMechanism = options.SaslMechanism;
-            config.SaslPassword = options.SaslPassword;
-            config.SaslUsername = options.SaslUserName;
-            config.SecurityProtocol = SecurityProtocol.SaslSsl;
-        }
+        config.FillConfig(options);
 
         return config;
-    }
-
-    private static async Task CreateTopicAsync(KafkaOptions options)
-    {
-        var falsePositiveErrorCodes = new List<ErrorCode>
-        {
-            ErrorCode.NoError,
-            ErrorCode.TopicAlreadyExists,
-        };
-
-        var adminConfig = new AdminClientConfig
-        {
-            BootstrapServers = options.BootstrapServers,
-            ClientId = options.ClientId,
-            SecurityProtocol = SecurityProtocol.Plaintext,
-            StatisticsIntervalMs = options.StatisticsIntervalInMilliSeconds,
-        };
-
-        using var adminClient = new AdminClientBuilder(adminConfig).Build();
-
-        try
-
-        {
-            await adminClient.CreateTopicsAsync(new[]
-            {
-                new TopicSpecification
-                {
-                    Name = "CAR-TOPIC",
-                    NumPartitions = 1,
-                },
-            });
-        }
-        catch (CreateTopicsException createTopicsException)
-        {
-            var test = false;
-            //ignore
-        }
     }
 }
