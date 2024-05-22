@@ -1,17 +1,20 @@
 ﻿namespace Kafka.Poc.Client.Customers.Customers.CommandHandlers;
 
-using Kafka.Poc.Client.Customers.Customers.Commands;
-using Kafka.Poc.Client.Customers.Customers.Interfaces;
-using Kafka.Poc.Client.Customers.Customers.Models;
+using global::Kafka.Poc.Client.Customers.Customers.Commands;
+using global::Kafka.Poc.Client.Customers.Customers.Interfaces;
+using global::Kafka.Poc.Client.Customers.Customers.Models;
+using global::Kafka.Poc.Client.Customers.Kafka.Interfaces;
 using MediatR;
 
 internal sealed class SubscribeRepositoryHandler : IRequestHandler<SubscribeRepository>
 {
+    private readonly ICustomerClientService customerClientService;
     private readonly ICustomerRepository customerRepository;
     private readonly ILogger<SubscribeRepositoryHandler> logger;
 
-    public SubscribeRepositoryHandler(ICustomerRepository customerRepository, ILogger<SubscribeRepositoryHandler> logger)
+    public SubscribeRepositoryHandler(ICustomerClientService customerClientService, ICustomerRepository customerRepository, ILogger<SubscribeRepositoryHandler> logger)
     {
+        this.customerClientService = customerClientService;
         this.customerRepository = customerRepository;
         this.logger = logger;
     }
@@ -31,6 +34,8 @@ internal sealed class SubscribeRepositoryHandler : IRequestHandler<SubscribeRepo
         {
             repository.ConsumerGroupId = Guid.NewGuid();
         }
+
+        await this.customerClientService.SubscribeAsync(repository.ConsumerGroupId, repository.Id, cancellationToken);
 
         await this.customerRepository.UpsertAsync(repository, cancellationToken);
     }

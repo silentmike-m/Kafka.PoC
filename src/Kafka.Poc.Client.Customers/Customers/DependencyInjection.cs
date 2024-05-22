@@ -1,7 +1,7 @@
 ﻿namespace Kafka.Poc.Client.Customers.Customers;
 
-using Kafka.Poc.Client.Customers.Customers.Interfaces;
-using Kafka.Poc.Client.Customers.Customers.Services;
+using global::Kafka.Poc.Client.Customers.Customers.Interfaces;
+using global::Kafka.Poc.Client.Customers.Customers.Services;
 
 internal static class DependencyInjection
 {

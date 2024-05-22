@@ -1,8 +1,8 @@
 ﻿namespace Kafka.Poc.Client.Customers.Customers.CommandHandlers;
 
-using Kafka.Poc.Client.Customers.Customers.Commands;
-using Kafka.Poc.Client.Customers.Customers.Interfaces;
-using Kafka.Poc.Client.Customers.Customers.Models;
+using global::Kafka.Poc.Client.Customers.Customers.Commands;
+using global::Kafka.Poc.Client.Customers.Customers.Interfaces;
+using global::Kafka.Poc.Client.Customers.Customers.Models;
 using MediatR;
 
 internal sealed class AddCustomerHandler : IRequestHandler<AddCustomer>

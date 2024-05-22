@@ -1,6 +1,6 @@
 ﻿namespace Kafka.Poc.Client.Customers.Customers.Interfaces;
 
-using Kafka.Poc.Client.Customers.Customers.Models;
+using global::Kafka.Poc.Client.Customers.Customers.Models;
 
 internal interface ICustomerRepository
 {

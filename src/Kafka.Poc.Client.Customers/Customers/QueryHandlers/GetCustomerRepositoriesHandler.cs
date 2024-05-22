@@ -1,7 +1,7 @@
 ﻿namespace Kafka.Poc.Client.Customers.Customers.QueryHandlers;
 
-using Kafka.Poc.Client.Customers.Customers.Interfaces;
-using Kafka.Poc.Client.Customers.Customers.Queries;
+using global::Kafka.Poc.Client.Customers.Customers.Interfaces;
+using global::Kafka.Poc.Client.Customers.Customers.Queries;
 using MediatR;
 
 internal sealed class GetCustomerRepositoriesHandler : IRequestHandler<GetCustomerRepositories, IReadOnlyList<Guid>>
