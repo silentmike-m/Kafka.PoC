@@ -1,5 +1,6 @@
 using System.Reflection;
 using Kafka.Poc.Client.Customers.Customers;
+using Kafka.Poc.Client.Customers.Kafka;
 using Serilog;
 
 const int EXIT_FAILURE = 1;
@@ -28,6 +29,8 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddCustomers();
+
+builder.Services.AddKafka(builder.Configuration);
 
 try
 {

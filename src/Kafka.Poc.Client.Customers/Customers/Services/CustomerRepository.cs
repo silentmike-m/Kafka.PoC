@@ -30,16 +30,4 @@ internal sealed class CustomerRepository : ICustomerRepository
 
         await Task.CompletedTask;
     }
-
-    public async Task<IReadOnlyList<CustomerEntity>> GetAllAsync(Guid repositoryId, CancellationToken cancellationToken = default)
-    {
-        var result = new List<CustomerEntity>();
-
-        if (this.customerRepositories.TryGetValue(repositoryId, out var repository))
-        {
-            result = repository.Customers.Values.ToList();
-        }
-
-        return await Task.FromResult(result);
-    }
 }

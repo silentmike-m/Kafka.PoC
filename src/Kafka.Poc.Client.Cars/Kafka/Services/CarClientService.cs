@@ -62,7 +62,7 @@ internal sealed class CarClientService : BackgroundService
                 consumer.Commit();
             }
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             consumer.Close();
 
