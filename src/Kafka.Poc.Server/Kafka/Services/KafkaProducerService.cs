@@ -18,6 +18,10 @@ internal sealed class KafkaProducerService : IKafkaProducerService
 
     public async Task PublishAsync<TMessage>(TMessage message, CancellationToken cancellationToken = default)
         where TMessage : IMessage
+        => await this.PublishAsync(message, string.Empty, cancellationToken);
+
+    public async Task PublishAsync<TMessage>(TMessage message, string partitionId, CancellationToken cancellationToken = default)
+        where TMessage : IMessage
     {
         this.logger.LogInformation("Try to publish message {MessageType} to topic {TopicName}", nameof(message), message.TopicName);
 
@@ -29,6 +33,7 @@ internal sealed class KafkaProducerService : IKafkaProducerService
 
         await producer.ProduceAsync(message.TopicName, new Message<string, string>
         {
+            Key = partitionId,
             Value = messageJson,
         }, cancellationToken);
     }
