@@ -2,6 +2,6 @@
 
 internal interface ICustomerClientService
 {
-    Task SubscribeAsync(Guid consumerGroupId, Guid repositoryId, CancellationToken cancellationToken);
-    Task UnSubscribeAsync(Guid repositoryId, CancellationToken cancellationToken);
+    Task SubscribeAsync(string consumerGroupId, string repositoryId, CancellationToken cancellationToken);
+    Task UnSubscribeAsync(string repositoryId, CancellationToken cancellationToken);
 }

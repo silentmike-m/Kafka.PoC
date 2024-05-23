@@ -35,7 +35,7 @@ internal sealed class SubscribeRepositoryHandler : IRequestHandler<SubscribeRepo
             repository.ConsumerGroupId = Guid.NewGuid();
         }
 
-        await this.customerClientService.SubscribeAsync(repository.ConsumerGroupId, repository.Id, cancellationToken);
+        await this.customerClientService.SubscribeAsync(repository.ConsumerGroupId.ToString(), repository.Id.ToString(), cancellationToken);
 
         await this.customerRepository.UpsertAsync(repository, cancellationToken);
     }

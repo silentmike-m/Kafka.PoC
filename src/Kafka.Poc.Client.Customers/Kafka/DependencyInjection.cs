@@ -13,9 +13,11 @@ internal static class DependencyInjection
 
         services.AddSingleton(options);
 
-        services.AddSingleton<IKafkaAdminService, KafkaAdminService>();
+        services.AddSingleton<IKafkaAdminFactory, KafkaAdminFactory>();
+        services.AddSingleton<IKafkaConsumerFactory, KafkaConsumerFactory>();
 
         services.AddSingleton<ICustomerClientService, CustomerClientService>();
+        services.AddTransient<ICustomerMessageProcessingService, CustomerMessageProcessingService>();
 
         return services;
     }

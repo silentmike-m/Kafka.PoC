@@ -6,11 +6,11 @@ using global::Kafka.Poc.Client.Cars.Kafka;
 using global::Kafka.Poc.Client.Customers.Kafka.Extensions;
 using global::Kafka.Poc.Client.Customers.Kafka.Interfaces;
 
-internal sealed class KafkaAdminService : IKafkaAdminService
+internal sealed class KafkaAdminFactory : IKafkaAdminFactory
 {
     private readonly KafkaOptions kafkaOptions;
 
-    public KafkaAdminService(KafkaOptions kafkaOptions)
+    public KafkaAdminFactory(KafkaOptions kafkaOptions)
         => this.kafkaOptions = kafkaOptions;
 
     public async Task CreateTopicAsync(string topicName)

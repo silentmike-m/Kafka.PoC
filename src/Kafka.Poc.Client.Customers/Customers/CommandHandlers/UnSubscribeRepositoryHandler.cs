@@ -26,7 +26,7 @@ internal sealed class UnSubscribeRepositoryHandler : IRequestHandler<UnSubscribe
 
         if (repository is not null)
         {
-            await this.customerClientService.UnSubscribeAsync(request.Id, cancellationToken);
+            await this.customerClientService.UnSubscribeAsync(request.Id.ToString(), cancellationToken);
         }
     }
 }

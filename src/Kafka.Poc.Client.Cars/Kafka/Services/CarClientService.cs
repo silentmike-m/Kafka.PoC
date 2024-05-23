@@ -30,7 +30,7 @@ internal sealed class CarClientService : BackgroundService
 
         using var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
 
-        consumer.Subscribe("CAR-TOPIC");
+        consumer.Subscribe(TopicNames.CAR_TOPIC_NAME);
 
         try
         {

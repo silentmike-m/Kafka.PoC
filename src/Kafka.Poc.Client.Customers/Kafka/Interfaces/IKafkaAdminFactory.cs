@@ -1,6 +1,6 @@
 ﻿namespace Kafka.Poc.Client.Customers.Kafka.Interfaces;
 
-internal interface IKafkaAdminService
+internal interface IKafkaAdminFactory
 {
     Task CreateTopicAsync(string topicName);
 }
