@@ -20,7 +20,7 @@ internal sealed class CustomerMessageProcessingService : ICustomerMessageProcess
 
     public async Task ProcessMessage(string consumerGroupId, string repositoryId, CancellationToken cancellationToken)
     {
-        using var consumer = await this.consumerFactory.CreateConsumerAsync(TopicNames.CUSTOMER_TOPIC_NAME, consumerGroupId, cancellationToken);
+        using var consumer = await this.consumerFactory.CreateConsumerAsync(consumerGroupId, TopicNames.CUSTOMER_TOPIC_NAME, cancellationToken);
 
         while (cancellationToken.IsCancellationRequested is false)
             try

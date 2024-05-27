@@ -28,7 +28,6 @@ internal sealed class KafkaProducerService : IKafkaProducerService
         var producerConfig = CreateProducerConfig(this.kafkaOptions);
 
         using var producer = new ProducerBuilder<string, string>(producerConfig).Build();
-
         var messageJson = JsonSerializer.Serialize(message);
 
         await producer.ProduceAsync(message.TopicName, new Message<string, string>
