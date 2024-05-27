@@ -39,7 +39,7 @@ internal sealed class CustomerMessageProcessingService : ICustomerMessageProcess
 
                 consumer.StoreOffset(message);
             }
-            catch (Exception)
+            catch
             {
                 consumer.Close();
 

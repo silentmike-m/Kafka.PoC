@@ -27,6 +27,7 @@ internal sealed class SubscribeRepositoryHandler : IRequestHandler<SubscribeRepo
 
         repository ??= new CustomerRepositoryEntity
         {
+            ConsumerGroupId = request.Id,
             Id = request.Id,
         };
 
